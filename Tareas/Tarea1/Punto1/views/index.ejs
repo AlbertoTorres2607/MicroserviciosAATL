@@ -1,0 +1,37 @@
+<div class="container">
+    <h2>Lista de Contactos</h2>
+    <% if (contactos.length === 0) { %>
+       <p class="no-contacts">No hay contactos en la agenda</p>
+    <% } else { %>
+        <table class="contacts-table">
+            <thead>
+                <tr>
+                    <th>Nombres</th>
+                    <th>Apellidos</th>
+                    <th>Fecha de Nacimiento</th>
+                    <th>Dirección</th>
+                    <th>Celular</th>
+                    <th>Correo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% contactos.forEach(contacto => { %>
+                    <tr>
+                        <td><%= contacto.nombres %></td>
+                        <td><%= contacto.apellidos %></td>
+                        <td><%= new Date(contacto.fecha_nacimiento).toLocaleDateString('es-ES') %></td>
+                        <td><%= contacto.direccion || '-' %></td>
+                        <td><%= contacto.celular || '-' %></td>
+                        <td><%= contacto.correo || '-' %></td>
+                        <td class="actions">
+                            <a href="/edit/<%= contacto.id %>" class="btn-edit">Editar</a>
+                            <a href="/delete/<%= contacto.id %>" class="btn-delete"
+                            onclick = "return confirm('¿Estás seguro de eliminar este contacto?')">Eliminar</a>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+        <% } %>
+</div>
