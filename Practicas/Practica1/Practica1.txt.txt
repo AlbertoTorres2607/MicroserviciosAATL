@@ -1,0 +1,196 @@
+-- 1. Insertar un alumno mujer con dos materias y padre de apellido "Torres". --
+
+db.alumnos.insertOne ({
+    nombres: "Carla",
+    apellidos: "Torres",
+    sexo: "F",
+    materias: ["SIS256", "SIS456"],
+    padre: { nombre: "Alberto", apellido: "Torres" }
+})
+
+-- 2. Insertar cinco alumnos a la vez con datos variados. --
+
+db.alumnos.insertMany([
+    { nombres: "Josue", apellidos: "Tellez", sexo: "M", casado: false, fecha_nacimiento: new Date("2000-07-08"), materias: ["SIS100"], padre: { nombre: "Octavio", apellido: "Tellez" } },
+    { nombres: "Natalia", apellidos: "Enriquez", sexo: "F", casado: false, fecha_nacimiento: new Date("2003-06-18"), materias: ["TEL201", "SIS311"], padre: { nombre: "Antonio", apellido: "Enriquez" } },
+    { nombres: "Diana", apellidos: "Davila", sexo: "F", casado: true, fecha_nacimiento: new Date("1996-07-21"), materias: ["COM450"], padre: { nombre: "Felipe", apellido: "Davila" } },
+    { nombres: "Mariana", apellidos: "Sánchez", sexo: "F", casado: true, fecha_nacimiento: new Date("1999-08-20"), materias: ["TEL100"], padre: { nombre: "Marco", apellido: "Sánchez" } },
+    { nombres: "Roberto", apellidos: "Villegas", sexo: "M", casado: false, fecha_nacimiento: new Date("2004-01-06"), materias: ["SIS110"], padre: { nombre: "Pedro", apellido: "Villegas" } }
+])
+
+-- 3. Insertar un alumno sin campo padre. --
+
+db.alumnos.insertOne({
+    nombres: "Tadeo",
+    apellidos: "Fernandez",
+    sexo: "M",
+    casado: false,
+    fecha_nacimiento: new Date("2004-07-30"),
+    materias: ["SIS320", "SIS386", "SIS420", "COM600"]
+})
+
+-- 4. Insertar un alumno hombre casado, nacido en 1990. --
+
+db.alumnos.insertOne({
+    nombres: "Juan Pablo",
+    apellidos: "Celis",
+    sexo: "M",
+    casado: true,
+    fecha_nacimiento: new Date("1990-11-01"),
+    materias: ["SIS310", "SIS420"],
+    padre: { nombre: "Adolfo", apellido: "Celis" }
+})
+
+-- 5. Insertar un alumno con 4 materias y padre "Carlos Pérez". -- 
+
+db.alumnos.insertOne({
+    nombres: "Carlos",
+    apellidos: "López",
+    sexo: "M",
+    casado: false,
+    fecha_nacimiento: new Date("2000-04-11"),
+    materias: ["SIS310", "SIS311", "SIS320", "SIS420"],
+    padre: { nombre: "Carlos", apellido: "Pérez" }
+})
+
+-- 6. Insertar un alumno solo con "COM350" como materia. --
+
+db.alumnos.insertOne({
+    nombres: "Aron",
+    apellidos: "Taborga",
+    sexo: "M",
+    casado: false,
+    fecha_nacimiento: new Date("2003-12-17"),
+    materias: ["COM350"],
+    padre: { nombre: "Pedro", apellido: "Taborga" }
+})
+
+-- 7. Listar alumnos cuyo padre tenga nombre "Luis" o "Miguel". --
+
+db.alumnos.find ({"padre.nombre": { $in: ["Luis", "Miguel"]}}, {_id: 0, nombres: 1, apellidos:1, padre: 1})
+
+-- 8. Mostrar alumnos no casados que tengan "SIS256". --
+
+db.alumnos.find ({casado: false, materias: "SIS256"}, {_id: 0, nombres: 1, apellidos: 1, casado: 1, materias: 1})
+
+-- 9. Contar alumnos con más de 2 materias. --
+
+db.alumnos.countDocuments({
+    materias: { $exists: true, $type: "array" },
+    $expr: { $gt: [{ $size: "$materias" }, 2] }
+})
+
+-- 10. Mostrar los 10 más viejos con nombres y fecha_nacimiento. --
+
+db.alumnos.find (
+  {}, 
+  { _id: 0, nombres: 1, fecha_nacimiento: 1 }
+).sort({ fecha_nacimiento: 1 }).limit(10)
+
+-- 11. Buscar alumnos con "COM350" y "SIS00". --
+
+db.alumnos.find ({materias: { $all: ["COM350", "SIS00"] }}, {_id: 0, nombres: 1, apellidos: 1, materias: 1})
+
+-- 12. Mostrar solo nombres y sexo de los alumnos mujeres. --
+
+db.alumnos.find(
+  { sexo: "F" }, 
+  { _id: 0, nombres: 1, sexo: 1 }
+)
+
+-- 13. Ordenar todos los alumnos por apellido ascendente. --
+
+db.alumnos.find({}, {_id: 0, nombres: 1, apellidos: 1}).sort({ apellidos: 1 })
+
+-- 14. Listar alumnos nacidos entre 1998 y 2003. --
+
+db.alumnos.find(
+  { 
+    fecha_nacimiento: { 
+      $gte: ISODate("1998-01-01"), 
+      $lte: ISODate("2003-12-31") 
+    } 
+  }, 
+  { _id: 0, nombres: 1, apellidos: 1, fecha_nacimiento: 1 }
+).limit(5)
+
+
+-- 15. Mostrar alumnos cuyo apellido termine en "ez". --
+
+db.alumnos.find(
+  { apellidos: /ez$/ },
+  { _id: 0, nombres: 1, apellidos: 1 }
+)
+
+-- 16. Contar alumnos casados y con "SIS258". --
+
+db.alumnos.countDocuments({ casado: true, materias: "SIS258" })
+
+-- 17. Cambiar el nombre "Luis" por "Luis Alberto". --
+
+db.alumnos.updateMany(
+  { nombres: "Luis" },
+  { $set: { nombres: "Luis Alberto" } }
+)
+
+-- 18. Agregar "SIS777" a todos los alumnos con "COM350". --
+
+db.alumnos.updateMany(
+  { materias: "COM350" },
+  { $addToSet: { materias: "SIS777" } }
+)
+
+-- 19. Poner casado: false a todos los alumnos con menos de 2 materias. --
+
+db.alumnos.updateMany(
+  { $or: [
+    { materias : { $size : 0 } },
+    { materias : { $size : 1 } }
+  ] },
+  { $set: { casado: false } }
+)
+
+-- 20. Quitar "SIS256" de todos los que la tengan. --
+
+db.alumnos.updateMany(
+  { materias: "SIS256" },
+  { $pull: { materias: "SIS256" } }
+)
+
+-- 21. Cambiar el nombre del padre "Juan" a "Juan José". --
+
+db.alumnos.updateMany(
+  { "padre.nombre": "Juan" },
+  { $set: { "padre.nombre": "Juan José" } }
+)
+
+-- 22. Agregar un campo activo: true a todos los documentos. --
+
+db.alumnos.updateMany(
+  {},
+  { $set: { activo: true } }
+)
+
+-- 23. Eliminar todos los alumnos hombres. --
+
+db.alumnos.deleteMany({ sexo: "M" })
+
+-- 24. Eliminar a quien tenga "SIS777" como materia. --
+
+db.alumnos.deleteMany({ materias: "SIS777" })
+
+-- 25. Eliminar a los alumnos cuyo padre tenga apellido "Ramírez". --
+
+db.alumnos.deleteMany({ "padre.apellido" : "Ramírez" })
+
+-- 26. Eliminar a los que nacieron después de 2004. --
+
+db.alumnos.deleteMany({ fecha_nacimiento : { $gt: new Date("2004-12-31") } })
+
+-- 27. Eliminar todos los casados. --
+
+db.alumnos.deleteMany({ casado : true})
+
+-- 28. Eliminar al primer alumno que tenga "SIS258". --
+
+db.alumnos.deleteOne({ materias: "SIS258" })
