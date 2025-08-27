@@ -1,0 +1,18 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Secrets / entorno
+.env
+.env.*
+!.env.example
+
+# Datos locales de la app
+uploads/
+logs/
+
+# SO / otros
+.DS_Store
+dist/
+coverage/
+docker-compose.local.yml
