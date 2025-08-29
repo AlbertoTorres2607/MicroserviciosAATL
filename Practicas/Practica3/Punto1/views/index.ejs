@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h1>Calculadora</h1>
+    
+    <form action="/calcular" method="POST">
+        <h2>Menu de Operaciones</h2>
+        
+        <input type="radio" id="sumar" name="operacion" value="sumar" checked>
+        <label for="sumar">Sumar</label><br>
+        
+        <input type="radio" id="restar" name="operacion" value="restar">
+        <label for="restar">Restar</label><br>
+        
+        <input type="radio" id="multiplicar" name="operacion" value="multiplicar">
+        <label for="multiplicar">Multiplicar</label><br>
+        
+        <input type="radio" id="dividir" name="operacion" value="dividir">
+        <label for="dividir">Dividir</label><br><br>
+        
+        <label for="numeroA">Numero A:</label>
+        <input type="number" id="numeroA" name="a" step="any" required><br><br>
+        
+        <label for="numeroB">Numero B:</label>
+        <input type="number" id="numeroB" name="b" step="any" required><br><br>
+        
+        <input type="submit" value="Calcular">
+    </form>
+</body>
+</html>

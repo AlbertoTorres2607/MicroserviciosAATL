@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h1>Resultado de la Calculadora</h1>
+    
+    <% if (error) { %>
+        <div class="error">
+            <p><strong>Error:</strong> <%= error %></p>
+        </div>
+    <% } else { %>
+        <div class="resultado">
+            <p><strong>Operacion:</strong> <%= operacion %></p>
+            <p><strong>Numero A:</strong> <%= num1 %></p>
+            <p><strong>Numero B:</strong> <%= num2 %></p>
+            <p><strong>Resultado:</strong> <%= resultado %></p>
+        </div>
+    <% } %>
+    
+    <br>
+    <a href="/">Volver a la calculadora</a>
+</body>
+</html>

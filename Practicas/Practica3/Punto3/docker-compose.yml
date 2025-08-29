@@ -1,0 +1,42 @@
+version: "3.9"
+
+services:
+  app:
+    build: .
+    container_name: tasks_app
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: ${PORT}
+      MONGODB_URI: ${MONGODB_URI}   # mongodb://mongo:27017/tasksdb
+    depends_on:
+      mongo:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/node_modules
+    networks:
+      - app_net
+
+  mongo:
+    image: mongo:6
+    container_name: mongo_db
+    restart: always
+    ports:
+      - "27017:27017"   
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok' || exit 1"]
+      interval: 5s
+      retries: 10
+      timeout: 3s
+    networks:
+      - app_net
+
+networks:
+  app_net:
+    driver: bridge
+
+volumes:
+  mongo_data:

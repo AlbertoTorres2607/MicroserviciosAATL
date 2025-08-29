@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Usuarios | Node + EJS + MySQL</title>
+  <link rel="stylesheet" href="/public/styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Registro y Listado de Usuarios</h1>
+
+    <section class="card">
+      <h2>Nuevo usuario</h2>
+      <form method="POST" action="/users" class="form-grid">
+        <label>Nombre:
+          <input type="text" name="name" placeholder="Ej: Ana Pérez" required />
+        </label>
+        <label>Correo:
+          <input type="email" name="email" placeholder="ana@example.com" required />
+        </label>
+        <button type="submit">Guardar</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Lista de usuarios</h2>
+      <% if (error) { %><p class="error"><%= error %></p><% } %>
+      <% if (users.length === 0) { %>
+        <p>No hay usuarios registrados.</p>
+      <% } else { %>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th><th>Nombre</th><th>Correo Electrónico</th><th>Fecha de Registro</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+          <% users.forEach(u => { %>
+            <tr>
+              <td><%= u.id %></td>
+              <td><%= u.name %></td>
+              <td><%= u.email %></td>
+              <td><%= new Date(u.created_at).toLocaleString() %></td>
+              <td>
+                <form method="POST" action="/users/<%= u.id %>/delete" onsubmit="return confirm('¿Eliminar este usuario?')">
+                  <button type="submit" class="danger">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+          </tbody>
+        </table>
+      </div>
+      <% } %>
+    </section>
+  </main>
+</body>
+</html>

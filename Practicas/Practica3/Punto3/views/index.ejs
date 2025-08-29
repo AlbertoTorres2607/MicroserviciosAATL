@@ -1,0 +1,47 @@
+<!doctype html><html lang="es"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Tareas</title><link rel="stylesheet" href="/public/styles.css"/>
+</head><body><main class="container">
+<h1>Gestión de Tareas</h1>
+
+<section class="card">
+  <h2>Nueva tarea</h2>
+  <form method="POST" action="/tasks" class="form-grid">
+    <label>Título:<input name="title" required /></label>
+    <label>Descripción:<input name="description" /></label>
+    <label>Estado:
+      <select name="status">
+        <option value="pendiente">Pendiente</option>
+        <option value="en_progreso">En progreso</option>
+        <option value="completado">Completado</option>
+      </select>
+    </label>
+    <button type="submit">Guardar</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Lista</h2>
+  <% if (error) { %><p class="error"><%= error %></p><% } %>
+  <% if (tasks.length === 0) { %><p>No hay tareas.</p><% } else { %>
+  <div class="table-wrap"><table><thead><tr>
+    <th>Título</th><th>Descripción</th><th>Estado</th><th>Creada</th><th>Acciones</th>
+  </tr></thead><tbody>
+  <% tasks.forEach(t => { %>
+    <tr>
+      <td><%= t.title %></td>
+      <td><%= t.description %></td>
+      <td><%= t.status %></td>
+      <td><%= new Date(t.createdAt).toLocaleString() %></td>
+      <td class="actions">
+        <a class="btn" href="/tasks/<%= t._id %>/edit">Editar</a>
+        <form method="POST" action="/tasks/<%= t._id %>/delete" onsubmit="return confirm('¿Eliminar?')">
+          <button class="danger" type="submit">Eliminar</button>
+        </form>
+      </td>
+    </tr>
+  <% }) %>
+  </tbody></table></div>
+  <% } %>
+</section>
+</main></body></html>
