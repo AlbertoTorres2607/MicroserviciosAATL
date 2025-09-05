@@ -1,0 +1,21 @@
+# dependencias
+node_modules/
+
+# env locales (¡no subir!)
+.env
+.env.*
+*.env
+*.env.*.local
+
+# logs y cachés
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-lock.yaml
+
+# sistemas/editores
+.DS_Store
+Thumbs.db
+.vscode/

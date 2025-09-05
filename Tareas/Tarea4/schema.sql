@@ -1,0 +1,35 @@
+CREATE DATABASE IF NOT EXISTS ventas_db
+  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE ventas_db;
+CREATE TABLE IF NOT EXISTS clientes (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  ci VARCHAR(20) NOT NULL UNIQUE,
+  nombres VARCHAR(120) NOT NULL,
+  apellidos VARCHAR(120) NOT NULL,
+  sexo ENUM('M','F','O') NOT NULL
+);
+CREATE TABLE IF NOT EXISTS productos (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  nombre VARCHAR(120) NOT NULL,
+  descripcion TEXT NULL,
+  marca VARCHAR(80) NULL,
+  stock INT NOT NULL DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS facturas (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  fecha DATE NOT NULL,
+  cliente_id INT NOT NULL,
+  CONSTRAINT fk_fact_cliente FOREIGN KEY (cliente_id) REFERENCES clientes(id)
+    ON DELETE RESTRICT ON UPDATE CASCADE
+);
+CREATE TABLE IF NOT EXISTS detalles_factura (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  factura_id INT NOT NULL,
+  producto_id INT NOT NULL,
+  cantidad INT NOT NULL,
+  precio_unitario DECIMAL(10,2) NOT NULL,
+  CONSTRAINT fk_det_fac FOREIGN KEY (factura_id) REFERENCES facturas(id)
+    ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT fk_det_prod FOREIGN KEY (producto_id) REFERENCES productos(id)
+    ON DELETE RESTRICT ON UPDATE CASCADE
+);
