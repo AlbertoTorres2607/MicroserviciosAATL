@@ -1,0 +1,29 @@
+syntax = "proto3";
+package estudiantes;
+import "google/protobuf/empty.proto";
+
+// Mensaje que representa un estudiante
+message Estudiante {
+ string ci = 1;
+ string nombres = 2;
+ string apellidos = 3;
+ string carrera = 4;
+}
+// Solicitud para obtener un estudiante por CI
+message EstudianteRequest {
+ string ci = 1;
+}
+// Respuesta con un estudiante
+message EstudianteResponse {
+ Estudiante estudiante = 1;
+}
+// Lista de estudiantes
+message EstudiantesList {
+ repeated Estudiante estudiantes = 1;
+}
+// Servicio
+service EstudianteService {
+ rpc AgregarEstudiante (Estudiante) returns (EstudianteResponse);
+ rpc ObtenerEstudiante (EstudianteRequest) returns (EstudianteResponse);
+ rpc ListarEstudiantes (google.protobuf.Empty) returns (EstudiantesList);
+}
