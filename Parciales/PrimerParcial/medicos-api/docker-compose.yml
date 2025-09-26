@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  mysql:
+    image: mysql:latest
+    container_name: medicos-db
+    restart: always
+    ports:
+      - "3306:3306"   # Mapea el puerto 3306 del contenedor a localhost:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: 12345
+      MYSQL_DATABASE: bd_medicos  # Nombre de la base de datos que se crea automáticamente
+    networks:
+      - medicos-network
+    volumes:
+      - mysql-data:/var/lib/mysql   # Persistencia de datos entre reinicios del contenedor
+
+  app:
+    build: .
+    container_name: medicos-app
+    restart: always
+    ports:
+      - "3000:3000"  # Mapea el puerto 3000 del contenedor al puerto 3000 de tu máquina
+    depends_on:
+      - mysql  # Asegura que el servicio MySQL esté listo antes de iniciar la app
+    environment:
+      DB_HOST: mysql  # Nombre del servicio mysql, que es usado como host en la red de Docker
+      DB_USER: root
+      DB_PASSWORD: 12345
+      DB_DATABASE: bd_medicos
+    networks:
+      - medicos-network
+    volumes:
+      - .:/app  # Volumen para el código de la aplicación
+
+networks:
+  medicos-network:
+    driver: bridge  # Crea una red interna entre los contenedores
+
+volumes:
+  mysql-data:  # Volumen persistente para los datos de MySQL
