@@ -1,0 +1,10 @@
+// Alerta: si errorCount > 3
+stream
+    |from()
+        .measurement('http_listener_v2')
+    |eval(lambda: "errorCount")
+        .as('errorCount')
+    |alert()
+        .crit(lambda: "errorCount" > 3)
+        .message('ALERTA: errorCount alto - {{ index .Fields "errorCount" }}')
+        .log('/tmp/alerts.log')
