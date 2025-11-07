@@ -1,0 +1,17 @@
+syntax = "proto3";
+option csharp_namespace = "Vehiculos.Grpc";
+
+package vehiculos;
+
+service VehiculosService {
+  rpc VerificarDisponibilidad (VerificarRequest) returns (VerificarReply);
+}
+
+message VerificarRequest {
+  string vehiculoId = 1;
+}
+
+message VerificarReply {
+  bool disponible = 1;
+  string estado = 2;
+}
